@@ -28,12 +28,17 @@ function renderDirectory(records) {
         const fields = record.fields;
         const card = document.createElement('div');
         card.className = 'user-card';
-        card.innerHTML = `
+        card.innerHTML = ` 
       <h3>${fields.Name || 'Anonymous'}</h3>
       <p><strong>Email:</strong> ${fields.Email || '—'}</p>
       <p><strong>Offers:</strong> ${fields['Skills Offered'] || '—'}</p>
       <p><strong>Needs:</strong> ${fields['Skills Needed'] || '—'}</p>
       <p><strong>Location:</strong> ${fields['City or Zip Code'] || '—'}</p>
+      <form onsubmit="sendMessage(event, '${fields.Email}', '${fields.Name}')">
+        <textarea name="message" placeholder="Write your message..." required></textarea>
+        <input type="email" name="replyTo" placeholder="Your email" required>
+        <button type="submit">Send</button>
+      </form>
     `;
         container.appendChild(card);
     });
@@ -54,3 +59,29 @@ document.getElementById('search-input').addEventListener('input', e => {
 
     renderDirectory(filtered);
 });
+
+function sendMessage(event, recipientEmail, recipientName) {
+    event.preventDefault();
+    const form = event.target;
+    const message = form.message.value;
+    const replyTo = form.replyTo.value;
+
+    fetch('/.netlify/functions/sendMessage', {
+        method: 'POST',
+        body: JSON.stringify({
+            message,
+            replyTo,
+            recipientEmail,
+            senderName: recipientName
+        })
+    })
+        .then(res => res.json())
+        .then(data => {
+            alert(data.message || 'Message sent!');
+            form.reset();
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Something went wrong.');
+        });
+}
