@@ -11,5 +11,21 @@
   "devDependencies": {
     "prettier": "^3.3.1",
     "vite": "^5.1.6"
+  },
+  "main": "directory.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IsaiahKoamalu/BigIslandConnect.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IsaiahKoamalu/BigIslandConnect/issues"
+  },
+  "homepage": "https://github.com/IsaiahKoamalu/BigIslandConnect#readme",
+  "description": "",
+  "dependencies": {
+    "node-fetch": "^3.3.2"
   }
 }
