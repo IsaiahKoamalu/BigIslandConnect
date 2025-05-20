@@ -1,39 +1,49 @@
 const fetch = require('node-fetch');
 
-exports.handler = async (event, context) => {
+exports.handler = async (event) => {
     try {
         const { message, replyTo, recipientEmail, senderName } = JSON.parse(event.body);
 
-        const emailData = {
-            service_id: 'service_8h83s6e',
-            template_id: 'template_en7x1hn',
-            user_id: 'UDBflDbZy-LEUfAxT',
-            template_params: {
-                message,
-                replyTo,
-                recipientEmail,
-                senderName
-            }
+        const emailPayload = {
+            personalizations: [
+                {
+                    to: [{ email: recipientEmail }],
+                    subject: `New message from ${senderName} via Skill Exchange`
+                }
+            ],
+            from: {
+                email: 'youremail@gmail.com', // ✅ must match your verified sender
+                name: 'Skill Exchange Bot'
+            },
+            reply_to: {
+                email: replyTo
+            },
+            content: [
+                {
+                    type: 'text/plain',
+                    value: `You’ve received a new message:\n\n"${message}"\n\nReply to: ${replyTo}`
+                }
+            ]
         };
 
-        console.log("Sending email with:", JSON.stringify(emailData, null, 2));
-
-        const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+        const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(emailData)
+            headers: {
+                'Authorization': `Bearer ${process.env.SENDGRID_API_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(emailPayload)
         });
 
-        const resultText = await response.text();
-        console.log("EmailJS raw response:", resultText);
-
         if (!response.ok) {
-            throw new Error(`EmailJS error: ${resultText}`);
+            const errorText = await response.text();
+            console.error("SendGrid error:", errorText);
+            throw new Error(`SendGrid response not OK: ${response.status}`);
         }
 
         return {
             statusCode: 200,
-            body: JSON.stringify({ message: 'Message sent!' })
+            body: JSON.stringify({ message: 'Email sent successfully!' })
         };
     } catch (err) {
         console.error("Function Error:", err.message);
@@ -43,3 +53,4 @@ exports.handler = async (event, context) => {
         };
     }
 };
+
