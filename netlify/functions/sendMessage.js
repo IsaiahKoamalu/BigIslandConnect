@@ -12,7 +12,7 @@ exports.handler = async (event) => {
                 }
             ],
             from: {
-                email: 'youremail@gmail.com', // ✅ must match your verified sender
+                email: 'ikbroderson@gmail.com', // ✅ must match your verified sender
                 name: 'Skill Exchange Bot'
             },
             reply_to: {
