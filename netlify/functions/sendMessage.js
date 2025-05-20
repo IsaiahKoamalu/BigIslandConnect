@@ -1,4 +1,12 @@
+console.log("Sending email with:", JSON.stringify(emailData, null, 2));
 const fetch = require('node-fetch');
+
+const resultText = await response.text();
+console.log("EmailJS raw response:", resultText);
+
+if (!response.ok) {
+    throw new Error(`EmailJS error: ${resultText}`);
+}
 
 exports.handler = async (event, context) => {
     const { message, replyTo, recipientEmail, senderName } = JSON.parse(event.body);
