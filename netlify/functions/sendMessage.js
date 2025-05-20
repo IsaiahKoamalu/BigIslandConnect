@@ -5,9 +5,9 @@ exports.handler = async (event, context) => {
         const { message, replyTo, recipientEmail, senderName } = JSON.parse(event.body);
 
         const emailData = {
-            service_id: 'YOUR_SERVICE_ID',
-            template_id: 'YOUR_TEMPLATE_ID',
-            user_id: 'YOUR_USER_ID',
+            service_id: 'service_8h83s6e',
+            template_id: 'template_en7x1hn',
+            user_id: 'UDBflDbZy-LEUfAxT',
             template_params: {
                 message,
                 replyTo,
